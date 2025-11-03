@@ -1,8 +1,8 @@
-import { cleanup, initializeDatabase } from "./db.ts";
+import * as db from "./db.ts";
 import * as streams from "./streams.ts";
-import { startApiServer } from "./api.ts";
+import * as api from "./api.ts";
 
-initializeDatabase();
+db.initialize();
 
 console.log("✅ Database initialized, Retention: 20 hours");
 
@@ -11,7 +11,7 @@ streams.connectAnnouncement();
 
 setInterval(
   () => {
-    const result = cleanup(20);
+    const result = db.cleanup(20);
     console.info(
       `🧹 Cleanup: removed ${result.positions} old positions and ${result.announcements} old announcements`,
     );
@@ -22,4 +22,4 @@ setInterval(
 console.info("🚀 SSE consumer started");
 
 // Start the API server
-await startApiServer();
+await api.startServer();

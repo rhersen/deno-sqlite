@@ -3,7 +3,7 @@ import type { AnnouncementRecord, PositionRecord } from "./types.ts";
 
 const PORT = parseInt(Deno.env.get("PORT") || "3000");
 
-export async function startApiServer(): Promise<void> {
+export async function startServer(): Promise<void> {
   const handler = (req: Request): Response => {
     const url = new URL(req.url);
     const path = url.pathname;

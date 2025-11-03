@@ -3,7 +3,7 @@ import type { AnnouncementRecord, PositionRecord } from "./types.ts";
 
 export const db = new Database("sse-data.db");
 
-export function initializeDatabase(): void {
+export function initialize(): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS positions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
