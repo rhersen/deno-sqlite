@@ -26,17 +26,12 @@ export async function connectPosition(): Promise<void> {
 
     eventSource.onmessage = (event: MessageEvent) => {
       try {
-        const data: TrafikverketResponse = JSON.parse(event.data);
-        if (data.RESPONSE.RESULT) {
-          data.RESPONSE.RESULT.forEach((resultItem: TrafikverketResultItem) => {
-            if (resultItem.TrainPosition) {
-              console.info(`${resultItem.TrainPosition.length} positions`);
-              resultItem.TrainPosition.forEach((position: PositionRecord) => {
-                savePosition(position);
-              });
-            }
-          });
-        }
+        JSON.parse(event.data).RESPONSE.RESULT.forEach(
+          ({ TrainPosition = [] }: TrafikverketResultItem) => {
+            console.info(`${TrainPosition.length} positions`);
+            TrainPosition.forEach(savePosition);
+          },
+        );
       } catch (error) {
         console.error("Error processing position message:", error);
       }
@@ -66,21 +61,12 @@ export async function connectAnnouncement(): Promise<void> {
 
     eventSource.onmessage = (event: MessageEvent) => {
       try {
-        const data: TrafikverketResponse = JSON.parse(event.data);
-        if (data.RESPONSE.RESULT) {
-          data.RESPONSE.RESULT.forEach((resultItem: TrafikverketResultItem) => {
-            if (resultItem.TrainAnnouncement) {
-              console.info(
-                `${resultItem.TrainAnnouncement.length} announcements`,
-              );
-              resultItem.TrainAnnouncement.forEach(
-                (announcement: AnnouncementRecord) => {
-                  saveAnnouncement(announcement);
-                },
-              );
-            }
-          });
-        }
+        JSON.parse(event.data).RESPONSE.RESULT.forEach(
+          ({ TrainAnnouncement = [] }: TrafikverketResultItem) => {
+            console.info(`${TrainAnnouncement.length} announcements`);
+            TrainAnnouncement.forEach(saveAnnouncement);
+          },
+        );
       } catch (error) {
         console.error("Error processing announcement message:", error);
       }
