@@ -46,9 +46,6 @@ export async function connectPosition(): Promise<void> {
       console.error("❌ Position stream error:", error);
       eventSource.close();
     };
-
-    // Keep the connection alive
-    await new Promise(() => {});
   } catch (error) {
     console.error("❌ Position stream error:", error);
   }
@@ -93,9 +90,6 @@ export async function connectAnnouncement(): Promise<void> {
       console.error("❌ Announcement stream error:", error);
       eventSource.close();
     };
-
-    // Keep the connection alive
-    await new Promise(() => {});
   } catch (error) {
     console.error("❌ Announcement stream error:", error);
   }
