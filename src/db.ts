@@ -198,7 +198,12 @@ export function cleanup(hoursToKeep: number = 20): {
   };
 }
 
-export function getStats(): { positions: number; announcements: number } {
+export function getStats(): {
+  positions: number;
+  announcements: number;
+  lastPosition: string | null;
+  lastAnnouncement: string | null;
+} {
   const pos = (
     db.prepare(`SELECT COUNT(*) as count FROM positions`).get() as {
       count: number;
@@ -209,5 +214,16 @@ export function getStats(): { positions: number; announcements: number } {
       count: number;
     }
   ).count;
-  return { positions: pos, announcements: ann };
+  const lastPos = db.prepare(
+    `SELECT MAX(timestamp) as timestamp FROM positions`,
+  ).get() as { timestamp: string } | undefined;
+  const lastAnn = db.prepare(
+    `SELECT MAX(time_at_location_with_seconds) as timestamp FROM announcements`,
+  ).get() as { timestamp: string } | undefined;
+  return {
+    positions: pos,
+    announcements: ann,
+    lastPosition: lastPos?.timestamp || null,
+    lastAnnouncement: lastAnn?.timestamp || null,
+  };
 }
